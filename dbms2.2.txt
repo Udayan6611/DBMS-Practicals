@@ -1,0 +1,193 @@
+Microsoft Windows [Version 10.0.19045.6093]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Program Files\MySQL\MySQL Server 9.3\bin>mysql -h localhost -u admin01 -p
+Enter password: *********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 21
+Server version: 9.3.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use demo;
+Database changed
+mysql> CREATE TABLE enrollment (
+    ->     enrollment_id INT PRIMARY KEY,
+    ->     student_id INT,
+    ->     course_id INT,
+    ->     FOREIGN KEY(student_id) REFERENCES students(student_id),
+    ->     FOREIGN KEY(course_id) REFERENCES courses(course_id)
+    -> );
+Query OK, 0 rows affected (0.720 sec)
+
+mysql> desc enrollment;
++---------------+------+------+-----+---------+-------+
+| Field         | Type | Null | Key | Default | Extra |
++---------------+------+------+-----+---------+-------+
+| enrollment_id | int  | NO   | PRI | NULL    |       |
+| student_id    | int  | YES  | MUL | NULL    |       |
+| course_id     | int  | YES  | MUL | NULL    |       |
++---------------+------+------+-----+---------+-------+
+3 rows in set (0.018 sec)
+
+mysql> desc students;
++---------------+--------------+------+-----+---------+-------+
+| Field         | Type         | Null | Key | Default | Extra |
++---------------+--------------+------+-----+---------+-------+
+| student_id    | int          | NO   | PRI | NULL    |       |
+| name          | varchar(255) | NO   |     | NULL    |       |
+| date_of_birth | date         | YES  |     | NULL    |       |
+| department_id | varchar(255) | YES  |     | CSE     |       |
++---------------+--------------+------+-----+---------+-------+
+4 rows in set (0.024 sec)
+
+mysql> desc courses;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| course_id   | int          | NO   | PRI | NULL    |       |
+| course_name | varchar(255) | YES  |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+2 rows in set (0.017 sec)
+
+mysql> create view student_view1 as SELECT student_id, name FROM students;
+Query OK, 0 rows affected (0.219 sec)
+
+mysql> SELECT * FROM student_view1;
+Empty set (0.076 sec)
+
+mysql> SELECT name FROM student_view1 where student_id = 101;
+Empty set (0.060 sec)
+
+mysql> INSERT INTO students (student_id, name, date_of_birth, department_id) VALUES
+    -> (101, 'Ajay', '2000-01-01', 101);
+ERROR 3819 (HY000): Check constraint 'CHK' is violated.
+mysql> SHOW CREATE TABLE students;
++----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table    | Create Table                                                                                                                                                                                                                                                                                                               |
++----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| students | CREATE TABLE `students` (
+  `student_id` int NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `department_id` varchar(255) DEFAULT 'CSE',
+  PRIMARY KEY (`student_id`),
+  CONSTRAINT `CHK` CHECK ((`student_id` > 990))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.067 sec)
+
+mysql> ALTER TABLE students DROP CONSTRAINT CHK;
+Query OK, 0 rows affected (0.163 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE students DROP CONSTRAINT CHK;
+ERROR 3940 (HY000): Constraint 'CHK' does not exist.
+mysql> ALTER TABLE students ADD CONSTRAINT CHK CHECK (student_id > 0);
+Query OK, 0 rows affected (0.535 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO students (student_id, name, date_of_birth, department_id) VALUES
+    -> (101, 'Ajay', '2000-01-01', 101);
+Query OK, 1 row affected (0.094 sec)
+
+mysql> SELECT * FROM student_view1;
++------------+------+
+| student_id | name |
++------------+------+
+|        101 | Ajay |
++------------+------+
+1 row in set (0.005 sec)
+
+mysql> SELECT name FROM student_view1 WHERE student_id = 101;
++------+
+| name |
++------+
+| Ajay |
++------+
+1 row in set (0.005 sec)
+
+mysql> INSERT INTO student_view1 (student_id, name) VALUES (105, 'Charlie');
+Query OK, 1 row affected (0.086 sec)
+
+mysql> DELETE FROM student_view1 WHERE student_id = 101;
+Query OK, 1 row affected (0.130 sec)
+
+mysql> UPDATE student_view1 SET name = 'AJAY' WHERE student_id = 101;
+Query OK, 0 rows affected (0.061 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> CREATE VIEW env AS SELECT s.name AS student_name, c.course_name, e.year AS academic_year FROM students s JOIN enrollment e ON s.student_id = e.enrollment_id JOIN courses c ON e.course_id = c.course_id;
+ERROR 1054 (42S22): Unknown column 'e.year' in 'field list'
+mysql> ALTER TABLE enrollment
+    -> ADD COLUMN year INT;
+Query OK, 0 rows affected (0.856 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> CREATE VIEW env ASSELECT    s.name AS student_name,    c.course_name,    e.year AS academic_yearFROM    students sJOIN    enrollment e ON s.student_id = e.student_idJOIN    courses c ON e.course_id = c.course_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ASSELECT    s.name AS student_name,    c.course_name,    e.year AS academic_year' at line 1
+mysql> CREATE VIEW env AS
+    -> SELECT
+    ->     s.name AS student_name,
+    ->     c.course_name,
+    ->     e.year AS academic_year
+    -> FROM
+    ->     students s
+    -> JOIN
+    ->     enrollment e ON s.student_id = e.student_id
+    -> JOIN
+    ->     courses c ON e.course_id = c.course_id;
+Query OK, 0 rows affected (0.105 sec)
+
+mysql> SELECT * FROM env;
+Empty set (0.024 sec)
+
+mysql> SELECT student_name, course_name FROM env WHERE academic_year = 2024;
+Empty set (0.005 sec)
+
+mysql> INSERT INTO courses (course_id, course_name, credit) VALUES(1, 'Database Systems', 3);
+ERROR 1054 (42S22): Unknown column 'credit' in 'field list'
+mysql> INSERT INTO courses (course_id, course_name) VALUES(1, 'Database Systems');
+Query OK, 1 row affected (0.092 sec)
+
+mysql> INSERT INTO students (student_id, name, date_of_birth, department_id) VALUES(102, 'Ajay', '2000-01-01', 'CSE');
+Query OK, 1 row affected (0.086 sec)
+
+mysql> INSERT INTO enrollment (enrollment_id, student_id, course_id, year) VALUES(1, 102, 1, 2024);
+Query OK, 1 row affected (0.091 sec)
+
+mysql> SELECT * FROM env;
++--------------+------------------+---------------+
+| student_name | course_name      | academic_year |
++--------------+------------------+---------------+
+| Ajay         | Database Systems |          2024 |
++--------------+------------------+---------------+
+1 row in set (0.006 sec)
+
+mysql> SELECT student_name, course_name FROM env WHERE academic_year = 2024;
++--------------+------------------+
+| student_name | course_name      |
++--------------+------------------+
+| Ajay         | Database Systems |
++--------------+------------------+
+1 row in set (0.005 sec)
+
+mysql> INSERT INTO env (student_name, course_name, academic_year) VALUES ('New Student', 'New Course', 2025);
+ERROR 1393 (HY000): Can not modify more than one base table through a join view 'demo.env'
+mysql> DELETE FROM env WHERE student_name = 'Ajay';
+ERROR 1395 (HY000): Can not delete from join view 'demo.env'
+mysql> UPDATE env SET academic_year = 2025 WHERE student_name = 'Ajay';
+Query OK, 1 row affected (0.107 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> /* mysql> INSERT INTO env (student_name, course_name, academic_year) VALUES ('New Student', 'New Course', 2025);
+ERROR 1393 (HY000): Can not modify more than one base table through a join view 'demo.env'
+mysql> DELETE FROM env WHERE student_name = 'Ajay';
+ERROR 1395 (HY000): Can not delete from join view 'demo.env' 
+Hence we now know that we cannot perform insert, delete, update operations on join view type of queries. */
