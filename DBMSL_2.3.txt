@@ -1,0 +1,205 @@
+C:\Program Files\MySQL\MySQL Server 9.3\bin>mysql -h localhost -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 9.3.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create table student_1(Rollno int PRIMARY KEY, name varchar(40), course varchar(40), fees int);
+Query OK, 0 rows affected (0.299 sec)
+
+mysql> desc student_1
+    -> ;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| Rollno | int         | NO   | PRI | NULL    |       |
+| name   | varchar(40) | YES  |     | NULL    |       |
+| course | varchar(40) | YES  |     | NULL    |       |
+| fees   | int         | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.015 sec)
+
+mysql> alter table student_1
+    -> modify COLUMN name varchar(40) NOT NULL;
+Query OK, 0 rows affected (0.354 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table student_1
+    -> modify COLUMN course varchar(40) NOT NULL;
+Query OK, 0 rows affected (0.371 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table student_1
+    -> modify COLUMN fees int NOT NULL;
+Query OK, 0 rows affected (0.526 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc student_1;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| Rollno | int         | NO   | PRI | NULL    |       |
+| name   | varchar(40) | NO   |     | NULL    |       |
+| course | varchar(40) | NO   |     | NULL    |       |
+| fees   | int         | NO   |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.012 sec)
+
+mysql> alter table student_1
+    -> add COLUMN class varchar(10);
+Query OK, 0 rows affected (0.395 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table student_1
+    -> modify COLUMN class varchar(10) NOT NULL;
+Query OK, 0 rows affected (0.344 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc student_1;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| Rollno | int         | NO   | PRI | NULL    |       |
+| name   | varchar(40) | NO   |     | NULL    |       |
+| course | varchar(40) | NO   |     | NULL    |       |
+| fees   | int         | NO   |     | NULL    |       |
+| class  | varchar(10) | NO   |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+5 rows in set (0.013 sec)
+
+mysql> INSERT into student_1(Rollno, name, course, class, fees) VALUES
+    -> (101, 'Sunil', 'Comp', 'B.E', 40000);
+Query OK, 1 row affected (0.098 sec)
+
+mysql> INSERT into student_1(Rollno, name, course, class, fees) VALUES
+    -> (102, 'Mohit', 'AIDS', 'T.E', 50000);
+Query OK, 1 row affected (0.093 sec)
+
+mysql> INSERT into student_1(Rollno, name, course, class, fees) VALUES
+    -> (103, 'Tushar', 'Comp', 'S.E', 50000);
+Query OK, 1 row affected (0.101 sec)
+
+mysql> INSERT into student_1(Rollno, name, course, class, fees) VALUES
+    -> (104, 'Mohit', 'IT', 'B.E', 60000);
+Query OK, 1 row affected (0.088 sec)
+
+mysql> INSERT into student_1(Rollno, name, course, class, fees) VALUES
+    -> (105, 'Rahul', 'IT', 'T.E', 50000);
+Query OK, 1 row affected (0.087 sec)
+
+mysql> desc student_1;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| Rollno | int         | NO   | PRI | NULL    |       |
+| name   | varchar(40) | NO   |     | NULL    |       |
+| course | varchar(40) | NO   |     | NULL    |       |
+| fees   | int         | NO   |     | NULL    |       |
+| class  | varchar(10) | NO   |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+5 rows in set (0.012 sec)
+
+mysql> update student_1 set fees = fees + 1100;
+Query OK, 5 rows affected (0.100 sec)
+Rows matched: 5  Changed: 5  Warnings: 0
+
+mysql> update student_1 set fees = fees + 1100  where class = 'B.E';
+Query OK, 2 rows affected (0.099 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> SELECT fees + 1100 from student_1 where class = 'B.E';
++-------------+
+| fees + 1100 |
++-------------+
+|       43300 |
+|       63300 |
++-------------+
+2 rows in set (0.004 sec)
+
+mysql> SELECT * from student_1 where name = 'Mohit';
++--------+-------+--------+-------+-------+
+| Rollno | name  | course | fees  | class |
++--------+-------+--------+-------+-------+
+|    102 | Mohit | AIDS   | 51100 | T.E   |
+|    104 | Mohit | IT     | 62200 | B.E   |
++--------+-------+--------+-------+-------+
+2 rows in set (0.004 sec)
+
+mysql> SELECT * from student_1 where course NOT in ('IT');
++--------+--------+--------+-------+-------+
+| Rollno | name   | course | fees  | class |
++--------+--------+--------+-------+-------+
+|    101 | Sunil  | Comp   | 42200 | B.E   |
+|    102 | Mohit  | AIDS   | 51100 | T.E   |
+|    103 | Tushar | Comp   | 51100 | S.E   |
++--------+--------+--------+-------+-------+
+3 rows in set (0.004 sec)
+
+mysql> SELECT * from student_1 order by name;
++--------+--------+--------+-------+-------+
+| Rollno | name   | course | fees  | class |
++--------+--------+--------+-------+-------+
+|    102 | Mohit  | AIDS   | 51100 | T.E   |
+|    104 | Mohit  | IT     | 62200 | B.E   |
+|    105 | Rahul  | IT     | 51100 | T.E   |
+|    101 | Sunil  | Comp   | 42200 | B.E   |
+|    103 | Tushar | Comp   | 51100 | S.E   |
++--------+--------+--------+-------+-------+
+5 rows in set (0.059 sec)
+
+mysql> create index xyz on student_1(Rollno);
+Query OK, 0 rows affected (0.351 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create unique index xyz on student_1(name);
+ERROR 1061 (42000): Duplicate key name 'xyz'
+mysql> create unique index abc on student_1(name);
+ERROR 1062 (23000): Duplicate entry 'Mohit' for key 'student_1.abc'
+mysql> create index pqr on student_1(name, course);
+Query OK, 0 rows affected (0.273 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+r version for the right syntax to use near '' at line 1
+mysql> alter table student_1 drop index xyz;
+Query OK, 0 rows affected (0.155 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> UPDATE student_1 set name = 'Ajay' where Rollno = 104;
+Query OK, 1 row affected (0.087 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from student_1;
++--------+--------+--------+-------+-------+
+| Rollno | name   | course | fees  | class |
++--------+--------+--------+-------+-------+
+|    101 | Sunil  | Comp   | 42200 | B.E   |
+|    102 | Mohit  | AIDS   | 51100 | T.E   |
+|    103 | Tushar | Comp   | 51100 | S.E   |
+|    104 | Ajay   | IT     | 62200 | B.E   |
+|    105 | Rahul  | IT     | 51100 | T.E   |
++--------+--------+--------+-------+-------+
+5 rows in set (0.004 sec)
+
+mysql> create unique index abc on student_1(name);
+Query OK, 0 rows affected (0.341 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show index from student_1;
++-----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table     | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| student_1 |          0 | PRIMARY  |            1 | Rollno      | A         |           5 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| student_1 |          0 | abc      |            1 | name        | A         |           5 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| student_1 |          1 | pqr      |            1 | name        | A         |           4 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| student_1 |          1 | pqr      |            2 | course      | A         |           5 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
++-----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+4 rows in set (0.131 sec)
+
