@@ -1,0 +1,121 @@
+Please enter a MongoDB connection string (Default: mongodb://localhost/):
+
+Current Mongosh Log ID: 68df9d1afbdb54161bcebea3
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.8
+Using MongoDB:          8.2.0
+Using Mongosh:          2.5.8
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-09-28T21:12:59.884-07:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> use demo;
+switched to db demo
+demo> show dbs;
+admin     40.00 KiB
+company   68.00 KiB
+config    36.00 KiB
+demo     132.00 KiB
+local     72.00 KiB
+product   56.00 KiB
+shopDB    72.00 KiB
+demo> use demox;
+switched to db demox
+demox> show dbs;
+admin     40.00 KiB
+company   68.00 KiB
+config    36.00 KiB
+demo     132.00 KiB
+local     72.00 KiB
+product   56.00 KiB
+shopDB    72.00 KiB
+demox> db.createCollection('stud');
+{ ok: 1 }
+demox> db.stud.insertOne({rolno:101,name:{fname:'ajay',mname:'tushar',lname:'devgan'});
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:78)
+
+> 1 | db.stud.insertOne({rolno:101,name:{fname:'ajay',mname:'tushar',lname:'devgan'});
+    |                                                                               ^
+  2 |
+
+demox> db.stud.insertOne({rolno:101,name:{fname:'ajay',mname:'tushar',lname:'devgan'}});
+{
+  acknowledged: true,
+  insertedId: ObjectId('68df9e46fbdb54161bcebea4')
+}
+demox> db.stud.find();
+[
+  {
+    _id: ObjectId('68df9e46fbdb54161bcebea4'),
+    rolno: 101,
+    name: { fname: 'ajay', mname: 'tushar', lname: 'devgan' }
+  }
+]
+demox> db.stud.find({rollno:101});
+
+demox> db.stud.insertMany([{rollno:102,name:'mohit',class:'TE',fees:20000},{rollno:103,name:'raj',class:'TE',fees:30000}]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68df9f78fbdb54161bcebea5'),
+    '1': ObjectId('68df9f78fbdb54161bcebea6')
+  }
+}
+demox> db.stud.update({rollno:102},{$set:{name:'rajrsh'}})
+DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+demox> db.stud.remove({rollno:101})
+DeprecationWarning: Collection.remove() is deprecated. Use deleteOne, deleteMany, findOneAndDelete, or bulkWrite.
+{ acknowledged: true, deletedCount: 0 }
+demox> db.stud.find()
+[
+  {
+    _id: ObjectId('68df9e46fbdb54161bcebea4'),
+    rolno: 101,
+    name: { fname: 'ajay', mname: 'tushar', lname: 'devgan' }
+  },
+  {
+    _id: ObjectId('68df9f78fbdb54161bcebea5'),
+    rollno: 102,
+    name: 'rajrsh',
+    class: 'TE',
+    fees: 20000
+  },
+  {
+    _id: ObjectId('68df9f78fbdb54161bcebea6'),
+    rollno: 103,
+    name: 'raj',
+    class: 'TE',
+    fees: 30000
+  }
+]
+demox> db.stud.remove({rolno:101});
+{ acknowledged: true, deletedCount: 1 }
+demox> db.stud.find()
+[
+  {
+    _id: ObjectId('68df9f78fbdb54161bcebea5'),
+    rollno: 102,
+    name: 'rajrsh',
+    class: 'TE',
+    fees: 20000
+  },
+  {
+    _id: ObjectId('68df9f78fbdb54161bcebea6'),
+    rollno: 103,
+    name: 'raj',
+    class: 'TE',
+    fees: 30000
+  }
+]
+demox>
