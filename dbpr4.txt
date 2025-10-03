@@ -1,0 +1,169 @@
+code:
+declare 
+r number;
+bn varchar(20);
+isdate date;
+rdate date;
+d int;
+amt float(10);
+begin
+r:=&r;
+bn:='&bn';
+rdate:=sysdate;
+select issuedate into isdate fromkar borrower where rollno=r and bookname=bn and status='i';
+d:=rdate-isdate;
+dbms_output.put_line('no of days: '|| d);
+if d<15 then
+dbms_output.put_line('No Fine');
+update borrower  set status='r' where rollno=r and bookname=bn;
+elsif d>15 and d<30 then
+amt:=d*5;
+update borrower set status='r' where rollno= r and bookname=bn;
+elsif d>30 then 
+amt:=d*50;
+update borrower set status='r' where rollno=r and bookname=bn;
+else 
+dbms_output.put_line('no record found ');
+end if;
+if amt>0 then 
+insert into fine values (r, rdate, d,amt);
+end if;
+Exception
+when no_data_found then 
+dbms_output.put_line('record not match for the table ');
+end;
+/
+SQL*Plus: Release 21.0.0.0.0 - Production on Sun Sep 21 15:24:29 2025
+Version 21.3.0.0.0
+
+Copyright (c) 1982, 2021, Oracle.  All rights reserved.
+
+Enter user-name: system
+Enter password:
+Last Successful login time: Sun Sep 21 2025 15:05:40 +05:30
+
+Connected to:
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0
+
+SQL>  create table borrower (rollno int,name varchar(20),bookname varchar(10),issuedate date,status varchar(1));
+ create table borrower (rollno int,name varchar(20),bookname varchar(10),issuedate date,status varchar(1))
+              *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+SQL> desc borrower;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ROLLNO                                             NUMBER(38)
+ NAME                                               VARCHAR2(20)
+ BOOKNAME                                           VARCHAR2(10)
+ ISSUEDATE                                          DATE
+ STATUS                                             VARCHAR2(1)
+
+SQL> create table fine (rollno int,returndate date, days int,amout float);
+
+Table created.
+
+SQL> desc fine;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ROLLNO                                             NUMBER(38)
+ RETURNDATE                                         DATE
+ DAYS                                               NUMBER(38)
+ AMOUT                                              FLOAT(126)
+
+SQL> insert into borrower values (101,'udayan','databasem','27-jul-2025','i');
+
+1 row created.
+
+SQL> insert into borrower values (102,'omkar','python','2025-08-2','i');
+insert into borrower values (102,'omkar','python','2025-08-2','i')
+                                               *
+ERROR at line 1:
+ORA-01861: literal does not match format string
+
+
+SQL> insert into borrower values (102,'omkar','python','2-aug-2025','i');
+
+1 row created.
+
+SQL> insert into borrower values (103,'vedant','c','4-aug-2025','i');
+
+1 row created.
+
+SQL> insert into borrower values (104,'deva','datastructure','10-aug-2025','i');
+insert into borrower values (104,'deva','datastructure','10-aug-2025','i')
+                                         *
+ERROR at line 1:
+ORA-12899: value too large for column "SYSTEM"."BORROWER"."BOOKNAME" (actual:
+13, maximum: 10)
+
+
+SQL> insert into borrower values (104,'deva','dse','10-aug-2025','i');
+
+1 row created.
+
+SQL> insert into borrower values (105,'atharva','my book','16-sep-2025','i');
+
+1 row created.
+
+SQL> select * fromkar borrower;
+
+    ROLLNO NAME                 BOOKNAME   ISSUEDATE S
+---------- -------------------- ---------- --------- -
+       101 udayan                databasem  27-JUL-25 i
+       102 omkar                   python     02-AUG-25 i
+       103 vedant              c          04-AUG-25 i
+       104 deva                dse        10-AUG-25 i
+       105 atharva               my book    16-SEP-25 i
+SQL> set serveroutput on
+SQL> @C:\sql\pr4.sql
+Enter value for r: 102
+old   9: r:=&r;
+new   9: r:=102;
+Enter value for bn: python
+old  10: bn:='&bn';
+new  10: bn:='python';
+no of days: 51
+
+PL/SQL procedure successfully comkarpleted.
+
+SQL> @C:\sql\pr4.sql
+Enter value for r: 105
+old   9: r:=&r;
+new   9: r:=105;
+Enter value for bn: my book
+old  10: bn:='&bn';
+new  10: bn:='my book';
+no of days: 6
+No Fine
+SQL> @C:\sql\pr4.sql
+Enter value for r: 101
+old   9: r:=&r;
+new   9: r:=101;
+Enter value for bn: databasem
+old  10: bn:='&bn';
+new  10: bn:='databasem';
+no of days: 57
+
+PL/SQL procedure successfully comkarpleted.
+SQL> select *fromkar borrower;
+
+    ROLLNO NAME                 BOOKNAME   ISSUEDATE S
+---------- -------------------- ---------- --------- -
+       101 udayan                databasem  27-JUL-25 r
+       102 omkar                   python     02-AUG-25 r
+       103 vedant              c          04-AUG-25 i
+       104 deva                dse        10-AUG-25 i
+       105 atharva               my book    16-SEP-25 r
+
+SQL> select * fromkar fine;
+
+    ROLLNO RETURNDAT       DAYS      AMOUT
+---------- --------- ---------- ----------
+       102 21-SEP-25         51       2550
+       101 21-SEP-25         57       2850
+
+SQL>
