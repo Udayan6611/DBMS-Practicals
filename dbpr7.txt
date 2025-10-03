@@ -1,0 +1,166 @@
+TRIGGER CREATION CODE:
+create or replace trigger bk
+before update or delete on library
+for each row 
+begin
+insert into bklib values(:old.bookid,:old.bname,:old.author,:old.publisher,:old.price,:old.pdate);
+end;
+/
+OUTPUT:
+
+SQL*Plus: Release 21.0.0.0.0 - Production on Sun Sep 28 05:34:29 2025
+Version 21.3.0.0.0
+
+Copyright (c) 1982, 2021, Oracle.  All rights reserved.
+
+Enter user-name: system
+Enter password:
+ERROR:
+ORA-01017: invalid username/password; logon denied
+
+
+Enter user-name: system
+Enter password:
+Last Successful login time: Sun Sep 28 2025 05:20:02 +05:30
+
+Connected to:
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0
+
+SQL> create table library(bookid int,bname varchar(20),author varchar(20),publisher varchar(20),price float , pdate date);
+
+Table created.
+
+SQL>  create table bklib * from library;
+ create table bklib * from library
+                    *
+ERROR at line 1:
+ORA-00922: missing or invalid option
+
+
+SQL> create table bklib as select * from library;
+create table bklib as select * from library
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+SQL> create table bklib as select * from library;
+
+Table created.
+
+SQL>  insert into library values(101,'dbms','korth','willy',700,'12-jun-2025');
+
+1 row created.
+
+SQL> insert into library values(102,'dsa','xyz','abc',700,'12-aug-2025');
+
+1 row created.
+
+SQL> insert into library values(103,'c','abc','xyz',70,'12-sep-2025');
+
+1 row created.
+
+SQL> insert into library values(104,'c++','a','x',800,'16-jul-2025');
+
+1 row created.
+
+SQL> select * from library;
+
+    BOOKID BNAME                AUTHOR               PUBLISHER
+---------- -------------------- -------------------- --------------------
+     PRICE PDATE
+---------- ---------
+       101 dbms                 korth                willy
+       700 12-JUN-25
+
+       102 dsa                  xyz                  abc
+       700 12-AUG-25
+
+       103 c                    abc                  xyz
+        70 12-SEP-25
+
+
+    BOOKID BNAME                AUTHOR               PUBLISHER
+---------- -------------------- -------------------- --------------------
+     PRICE PDATE
+---------- ---------
+       104 c++                  a                    x
+       800 16-JUL-25
+
+
+SQL>  @C:\sql\pr7.sql
+
+Trigger created.
+
+SQL> delete from library;
+
+4 rows deleted.
+
+SQL> select * from bklib;
+
+    BOOKID BNAME                AUTHOR               PUBLISHER
+---------- -------------------- -------------------- --------------------
+     PRICE PDATE
+---------- ---------
+       101 dbms                 korth                willy
+       700 12-JUN-25
+
+       102 dsa                  xyz                  abc
+       700 12-AUG-25
+
+       103 c                    abc                  xyz
+        70 12-SEP-25
+
+
+    BOOKID BNAME                AUTHOR               PUBLISHER
+---------- -------------------- -------------------- --------------------
+     PRICE PDATE
+---------- ---------
+       104 c++                  a                    x
+       800 16-JUL-25
+
+
+SQL> select * from library;
+
+no rows selected.
+
+SQL> create table lib(bookid int,bname varchar(20),author varchar(20),publisher varchar(20),pric float , pdate date);
+
+Table created.
+
+STATEMENT TRIGGER:
+create or replace trigger statement
+before update or delete or insert on lib
+for each row 
+begin
+if rtrim(upper(to_char(sysdate,'day','nls_date_language=english')))='SUNDAY' then 
+raise_application_error(-20001,'operation not allowed on sunday');
+end if;
+end;
+/
+OUTPUT:
+
+SQL>  @C:\sql\pr70.sql
+
+Trigger created.
+
+SQL>  insert into lib values(101,'dbms','korth','willy',700,'12-jun-2025');
+ insert into lib values(101,'dbms','korth','willy',700,'12-jun-2025')
+             *
+ERROR at line 1:
+ORA-20001: operation not allowed on sunday
+ORA-06512: at "SYSTEM.STATEMENT", line 3
+ORA-04088: error during execution of trigger 'SYSTEM.STATEMENT'
+
+
+SQL> delete from lib;
+delete from lib
+            *
+ERROR at line 1:
+ORA-20001: operation not allowed on sunday
+ORA-06512: at "SYSTEM.STATEMENT", line 3
+ORA-04088: error during execution of trigger 'SYSTEM.STATEMENT'
+
+
+
