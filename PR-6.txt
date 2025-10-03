@@ -1,0 +1,281 @@
+SQL*Plus: Release 21.0.0.0.0 - Production on Sun Sep 21 19:50:41 2025
+Version 21.3.0.0.0
+
+Copyright (c) 1982, 2021, Oracle.  All rights reserved.
+
+Enter user-name: system
+Enter password:
+Last Successful login time: Sun Sep 21 2025 16:40:29 +05:30
+
+Connected to:
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0
+
+SQL> create table product(pid int,ProductName varchar(20),price float,qty int);
+
+Table created.
+
+SQL> insert into product values(101,'Mobile',1200,1);
+
+1 row created.
+
+SQL> insert into product values(102,'Laptop',28000,2);
+
+1 row created.
+
+SQL> insert into product values(103,'computer',20000,3);
+
+1 row created.
+
+SQL> select * from product;
+
+       PID PRODUCTNAME               PRICE        QTY
+---------- -------------------- ---------- ----------
+       101 Mobile                     1200          1
+       102 Laptop                    28000          2
+       103 computer                        20000          3
+Code:
+Implicit cursor:
+declare
+id int;
+pname varchar(20);
+price float;
+qty int;
+begin
+id:=&id;
+select pid,ProductName,price,qty into id,pname,price,qty from product where pid=id;
+if sql% found then
+dbms_output.put_line(id||pname||price||qty);
+end if;
+end;
+/
+Ouput:
+
+SQL> set serveroutput on
+SQL> @C:\sql\pr61.sql
+Enter value for pid: 102
+old   7: pid:=&pid;
+new   7: pid:=102;
+select pid,ProductName,price,qty into pid,pname,price,qty where pid=pid;
+SQL> @C:\sql\pr61.sql
+Enter value for id: 102
+old   7: id:=&id;
+new   7: id:=102;
+102Laptop280002
+
+PL/SQL procedure successfully completed.
+
+SQL> @C:\sql\pr61.sql
+Enter value for id: 101
+old   7: id:=&id;
+new   7: id:=101;
+101Mobile12001
+
+PL/SQL procedure successfully completed.
+Code: Explicit Cursor
+declare 
+pid int;
+pname varchar(50);
+pr float;
+qty int;
+cursor c1(p float) is select * from product where price>=p;
+begin
+open c1(&p);
+loop 
+fetch c1 into pid,pname,pr,qty;
+exit when c1%notfound;
+dbms_output.put_line(pid||pname||pr||qty);
+end loop;
+close c1;
+end;
+/
+output:
+
+SQL> @C:\sql\pr71.sql
+Enter value for p: 101
+old   8: open c1(&p);
+new   8: open c1(101);
+dbms_output.put_line(pid||pname||price||qty);
+                                 *
+ERROR at line 12:
+ORA-06550: line 12, column 34:
+PLS-00201: identifier 'PRICE' must be declared
+ORA-06550: line 12, column 1:
+PL/SQL: Statement ignored
+
+
+SQL> @C:\sql\pr71.sql
+Enter value for p: 101
+old   8: open c1(&p);
+new   8: open c1(101);
+101Mobile12001
+102Laptop280002
+103computer200003
+
+PL/SQL procedure successfully completed.
+
+SQL> @C:\sql\pr71.sql
+Enter value for p: 15000
+old   8: open c1(&p);
+new   8: open c1(15000);
+102Laptop280002
+103computer200003
+
+PL/SQL procedure successfully completed.
+
+SQL> @C:\sql\pr71.sql
+Enter value for p: 20000
+old   8: open c1(&p);
+new   8: open c1(20000);
+102Laptop280002
+103computer200003
+
+PL/SQL procedure successfully completed.
+
+SQL> 21000
+SP2-0226: Invalid line number
+SQL> @C:\sql\pr71.sql
+Enter value for p: 21000
+old   8: open c1(&p);
+new   8: open c1(21000);
+102Laptop280002
+
+PL/SQL procedure successfully completed.
+CODE: Update Cursor
+declare 
+pid int;
+pname varchar(50);
+pr float;
+qty int;
+cursor c1(p float) is select * from product where price>p for update;
+begin
+open c1(&p);
+loop 
+fetch c1 into pid,pname,pr,qty;
+exit when c1% notfound;
+update product set price=price-2000 where current of c1;
+dbms_output.put_line(pid||pname||pr||qty);
+end loop;
+close c1;
+end;
+OUTPUT :
+SQL> set serveroutput on
+SQL> @C:\sql\pr72.sql
+Enter value for p: 103
+old   8: open c1(&p);
+new   8: open c1(103);
+102Laptop260002
+103computer180003
+
+PL/SQL procedure successfully completed.
+
+SQL> @C:\sql\pr72.sql
+Enter value for p: 102
+old   8: open c1(&p);
+new   8: open c1(102);
+102Laptop240002
+103computer160003
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from product;
+
+       PID PRODUCTNAME               PRICE        QTY
+---------- -------------------- ---------- ----------
+       101 Mobile                     -800          1
+       102 Laptop                    22000          2
+       103 computer                        14000          3
+CODE: DELETE CURSOR
+declare 
+pid int;
+pname varchar(50);
+pr float;
+qty int;
+cursor c1(p float) is select * from product where price>p for update;
+begin
+open c1(&p);
+loop 
+fetch c1 into pid,pname,pr,qty;
+exit when c1% notfound;
+delete from product where current of c1;
+dbms_output.put_line(pid||pname||pr||qty);
+end loop;
+close c1;
+end;
+/
+OUTPUT:
+SQL> set serveroutput on
+SQL> @C:\sql\pr7.sql
+SP2-0310: unable to open file "C:\sql\pr7.sql"
+SQL> @C:\sql\pr73.sql
+Enter value for p: 102
+old   8: open c1(&p);
+new   8: open c1(102);
+102Laptop220002
+103computer140003
+
+PL/SQL procedure successfully completed.
+
+SQL> @C:\sql\pr73.sql
+Enter value for p: 101
+old   8: open c1(&p);
+new   8: open c1(101);
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from product;
+
+       PID PRODUCTNAME               PRICE        QTY
+---------- -------------------- ---------- ----------
+       101 Mobile                     -800          1
+CODE:FOR LOOP 
+declare
+rec product%rowtype;
+cursor c1 is select * from product;
+begin
+for rec in c1 loop
+dbms_output.put_line(rec.pid||rec.productname||rec.price||rec.qty);
+end loop;
+end;
+/ 
+OUTPUT:
+SQL> insert into product values(102,'Laptop',28000,2);
+
+1 row created.
+
+SQL>  insert into product values(103,'computer',20000,3);
+
+1 row created.
+
+SQL> select * from product;
+
+       PID PRODUCTNAME               PRICE        QTY
+---------- -------------------- ---------- ----------
+       101 Mobile                     -800          1
+       102 Laptop                    28000          2
+       103 computer                        20000          3
+
+SQL> set serveroutput on
+SQL> @C:\sql\pr74.sql
+101Mobile-8001
+102Laptop280002
+103computer200003
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from product;
+
+       PID PRODUCTNAME               PRICE        QTY
+---------- -------------------- ---------- ----------
+       101 Mobile                     -800          1
+       102 Laptop                    28000          2
+       103 computer                        20000          3
+
+SQL> @C:\sql\pr74.sql
+101Mobile-8001
+102Laptop280002
+103computer200003
+
+PL/SQL procedure successfully completed.
+
+
