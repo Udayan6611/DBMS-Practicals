@@ -1,0 +1,206 @@
+
+
+
+Input:-
+create or replace procedure proc_grad( r in number, m in number,grade out varchar)
+is 
+begin
+if m<=1500 and m>=900 then
+grade:=':pass with dist';
+elsif m<=899 and m>=825 then
+grade:=':pass with first class';
+elsif m<=824 and m>=750 then
+grade:=':pass with second class';
+else
+grade:=':fail';
+end if;
+end;
+/
+
+
+declare
+r number;
+m number;
+grade varchar(100);
+nm varchar(50);
+begin
+r:=&r;
+select RollNo,Name,TotalMark into r,nm,m fraditya result where RollNo=r;
+proc_grad(r,m,grade);
+dbms_output.put_line(r||m||grade);
+end;
+/
+
+Output:-
+SQL*Plus: Release 21.0.0.0.0 - Production on Fri Sep 26 02:27:36 2025
+Version 21.3.0.0.0
+
+Copyright (c) 1982, 2021, Oracle.  All rights reserved.
+
+Enter user-name: system
+Enter password:
+Last Successful login time: Fri Sep 26 2025 01:51:21 +05:30
+
+Connected to:
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0
+
+SQL>
+SQL> CREATE TABLE s_mark (
+  2      st_name VARCHAR2(20),
+  3      class   VARCHAR2(10)
+  4  );
+
+Table created.
+
+SQL>
+SQL>
+SQL> INSERT INTO s_mark VALUES ('udayan', 12);
+
+1 row created.
+
+SQL> INSERT INTO s_mark VALUES ('aditya', 13);
+
+1 row created.
+
+SQL> INSERT INTO s_mark VALUES ('avinash', 10);
+
+1 row created.
+
+SQL> INSERT INTO s_mark VALUES ('suraj', 14);
+
+1 row created.
+
+SQL>
+SQL>
+SQL> CadityaMIT;
+
+Cadityamit cadityaplete.
+
+SQL>
+SQL>
+SQL> SELECT * FRaditya s_mark;
+
+ST_NAME              CLASS
+-------------------- ----------
+udayan               12
+aditya                   13
+avinash               10
+suraj              14
+
+SQL>
+SQL> CREATE TABLE result (
+  2      RollNO    INT,
+  3      Name      VARCHAR2(60),
+  4      TotalMark INT
+  5  );
+
+Table created.
+
+SQL>
+SQL>
+SQL> INSERT INTO result VALUES (101, 'udayan', 1400);
+
+1 row created.
+
+SQL> INSERT INTO result VALUES (102, 'aditya', 950);
+
+1 row created.
+
+SQL> INSERT INTO result VALUES (103, 'Avinash', 580);
+
+1 row created.
+
+SQL> INSERT INTO result VALUES (104, 'suraj', 767);
+
+1 row created.
+
+SQL> INSERT INTO result VALUES (105, 'rahul', 1023);
+
+1 row created.
+
+SQL>
+SQL>
+SQL> CadityaMIT;
+
+Cadityamit cadityaplete.
+
+SQL>
+SQL>
+SQL> SELECT * FRaditya result;
+
+    ROLLNO NAME
+---------- ------------------------------------------------------------
+ TOTALMARK
+----------
+       101 udayan
+      1400
+
+       102 aditya
+       950
+
+       103 Avinash
+       580
+
+
+    ROLLNO NAME
+---------- ------------------------------------------------------------
+ TOTALMARK
+----------
+       104 suraj
+       767
+
+       105 rahul
+      1023
+
+
+SQL> et serveroutput on
+SP2-0734: unknown cadityamand beginning "et servero..." - rest of line ignored.
+SQL>  set serveroutput on
+SQL> @ C:\Users\udayan\OneDrive\Desktop\procedure/prog.sql
+
+Procedure created.
+
+Enter value for r: 103
+old   7: r:=&r;
+new   7: r:=103;
+103580:fail
+
+PL/SQL procedure successfully cadityapleted.
+
+SQL> 102
+SP2-0226: Invalid line number
+SQL> 101
+SP2-0226: Invalid line number
+SQL> @ C:\Users\udayan\OneDrive\Desktop\procedure/prog.sql
+
+Procedure created.
+
+Enter value for r: 101
+old   7: r:=&r;
+new   7: r:=101;
+1011400:pass with dist
+
+PL/SQL procedure successfully cadityapleted.
+
+SQL> @ C:\Users\udayan\OneDrive\Desktop\procedure/prog.sql
+
+Procedure created.
+
+Enter value for r: 102
+old   7: r:=&r;
+new   7: r:=102;
+102950:pass with dist
+
+PL/SQL procedure successfully cadityapleted.
+
+SQL> @ C:\Users\udayan\OneDrive\Desktop\procedure/prog.sql
+
+Procedure created.
+
+Enter value for r: 104
+old   7: r:=&r;
+new   7: r:=104;
+104767:pass with second class
+
+PL/SQL procedure successfully cadityapleted.
