@@ -26,17 +26,17 @@ connect> use demo
 switched to db demo
 demo> use fees
 switched to db fees
-fees> db.fees.insertOne({Rollno:101,Name:'kunal',Class:'TE',Amount:45000,pdate:'12-07-2025'})
+fees> db.fees.insertOne({Rollno:101,Name:'udayan',Class:'TE',Amount:45000,pdate:'10-07-2025'})
 {
   acknowledged: true,
   insertedId: ObjectId('68e8d2f9b0e19bf89acebea4')
 }
-fees> db.fees.insertOne({Rollno:102,Name:'om',Class:'TE',Amount:40000,pdate:'11-07-2025'})
+fees> db.fees.insertOne({Rollno:102,Name:'omkar',Class:'TE',Amount:40000,pdate:'11-07-2025'})
 {
   acknowledged: true,
   insertedId: ObjectId('68e8d4e8b0e19bf89acebea5')
 }
-fees> db.fees.insertOne({Rollno:103,Name:'Tejas',Class:'BE',Amount:20000,pdate:'13-07-2025'})
+fees> db.fees.insertOne({Rollno:103,Name:'sarthak',Class:'BE',Amount:20000,pdate:'12-07-2025'})
 {
   acknowledged: true,
   insertedId: ObjectId('68e8d50cb0e19bf89acebea6')
@@ -46,15 +46,15 @@ fees> db.fees.find()
   {
     _id: ObjectId('68e8d2f9b0e19bf89acebea4'),
     Rollno: 101,
-    Name: 'kunal',
+    Name: 'udayan',
     Class: 'TE',
     Amount: 45000,
-    pdate: '12-07-2025'
+    pdate: '10-07-2025'
   },
   {
     _id: ObjectId('68e8d4e8b0e19bf89acebea5'),
     Rollno: 102,
-    Name: 'om',
+    Name: 'omkar',
     Class: 'TE',
     Amount: 40000,
     pdate: '11-07-2025'
@@ -62,10 +62,10 @@ fees> db.fees.find()
   {
     _id: ObjectId('68e8d50cb0e19bf89acebea6'),
     Rollno: 103,
-    Name: 'Tejas',
+    Name: 'sarthak',
     Class: 'BE',
     Amount: 20000,
-    pdate: '13-07-2025'
+    pdate: '12-07-2025'
   }
 ]
 fees> db.fees.aggregate([{$group:{_id:null,totalamount:{$sum:'$Amount'}}}])
@@ -80,7 +80,7 @@ fees> db.fees.aggregate([{$group:{_id:'$Class',totalamount:{$push:'$Amount'}}}])
   { _id: 'TE', totalamount: [ 45000, 40000 ] },
   { _id: 'BE', totalamount: [ 20000 ] }
 ]
-fees> db.fees.insertOne({Rollno:104,Name:'Tanmay',Class:'TE',Amount:45000,pdate:'13-07-2025'})
+fees> db.fees.insertOne({Rollno:104,Name:'Tom',Class:'TE',Amount:45000,pdate:'13-07-2025'})
 {
   acknowledged: true,
   insertedId: ObjectId('68e8d684b0e19bf89acebea7')
@@ -153,3 +153,4 @@ fees> db.fees.getIndexes()
   { v: 2, key: { Rollno: 1 }, name: 'Rollno_1' },
   { v: 2, key: { Class: 1 }, name: 'Class_1' }
 ]
+
