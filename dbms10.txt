@@ -1,0 +1,155 @@
+Please enter a MongoDB connection string (Default: mongodb://localhost/): connect
+connect
+Current Mongosh Log ID: 68e8d267b0e19bf89acebea3
+Connecting to:          mongodb://127.0.0.1:27017/connect?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.8
+Using MongoDB:          8.0.14
+Using Mongosh:          2.5.8
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-10-10T09:37:26.173+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+connect> show dbs
+admin        100.00 KiB
+bank         120.00 KiB
+bankexample   96.00 KiB
+college       72.00 KiB
+config        96.00 KiB
+demo          48.00 KiB
+local         72.00 KiB
+mapreduce      3.29 MiB
+test          72.00 KiB
+connect> use demo
+switched to db demo
+demo> use fees
+switched to db fees
+fees> db.fees.insertOne({Rollno:101,Name:'kunal',Class:'TE',Amount:45000,pdate:'12-07-2025'})
+{
+  acknowledged: true,
+  insertedId: ObjectId('68e8d2f9b0e19bf89acebea4')
+}
+fees> db.fees.insertOne({Rollno:102,Name:'om',Class:'TE',Amount:40000,pdate:'11-07-2025'})
+{
+  acknowledged: true,
+  insertedId: ObjectId('68e8d4e8b0e19bf89acebea5')
+}
+fees> db.fees.insertOne({Rollno:103,Name:'Tejas',Class:'BE',Amount:20000,pdate:'13-07-2025'})
+{
+  acknowledged: true,
+  insertedId: ObjectId('68e8d50cb0e19bf89acebea6')
+}
+fees> db.fees.find()
+[
+  {
+    _id: ObjectId('68e8d2f9b0e19bf89acebea4'),
+    Rollno: 101,
+    Name: 'kunal',
+    Class: 'TE',
+    Amount: 45000,
+    pdate: '12-07-2025'
+  },
+  {
+    _id: ObjectId('68e8d4e8b0e19bf89acebea5'),
+    Rollno: 102,
+    Name: 'om',
+    Class: 'TE',
+    Amount: 40000,
+    pdate: '11-07-2025'
+  },
+  {
+    _id: ObjectId('68e8d50cb0e19bf89acebea6'),
+    Rollno: 103,
+    Name: 'Tejas',
+    Class: 'BE',
+    Amount: 20000,
+    pdate: '13-07-2025'
+  }
+]
+fees> db.fees.aggregate([{$group:{_id:null,totalamount:{$sum:'$Amount'}}}])
+[ { _id: null, totalamount: 105000 } ] is deprecated. Use countDocuments or estimatedDocumentCount.
+fees> db.fees.aggregate([{$group:{_id:'$Class',totalamount:{$sum:'$Amount'}}}])
+[
+  { _id: 'TE', totalamount: 85000 },
+  { _id: 'BE', totalamount: 20000 }
+]
+fees> db.fees.aggregate([{$group:{_id:'$Class',totalamount:{$push:'$Amount'}}}])
+[
+  { _id: 'TE', totalamount: [ 45000, 40000 ] },
+  { _id: 'BE', totalamount: [ 20000 ] }
+]
+fees> db.fees.insertOne({Rollno:104,Name:'Tanmay',Class:'TE',Amount:45000,pdate:'13-07-2025'})
+{
+  acknowledged: true,
+  insertedId: ObjectId('68e8d684b0e19bf89acebea7')
+}
+fees> db.fees.aggregate([{$group:{_id:'$Class',totalamount:{$push:'$Amount'}}}])
+[
+  { _id: 'TE', totalamount: [ 45000, 40000, 45000 ] },
+  { _id: 'BE', totalamount: [ 20000 ] }
+]
+fees> db.fees.aggregate([{$group:{_id:'$Class',totalamount:{$AddToSet:'$Amount'}}}])
+MongoServerError[Location15952]: unknown group operator '$AddToSet'
+fees> db.fees.aggregate([{$group:{_id:'$Class',totalamount:{$addToSet:'$Amount'}}}])
+[
+  { _id: 'BE', totalamount: [ 20000 ] },
+  { _id: 'TE', totalamount: [ 40000, 45000 ] }
+]
+fees> db.fees.aggregate([{$group:{_id:'$Class',totalamount:{$min:'$Amount'}}}])
+[
+  { _id: 'TE', totalamount: 40000 },
+  { _id: 'BE', totalamount: 20000 }
+]
+fees> db.fees.aggregate([{$group:{_id:'$Class',totalamount:{$max:'$Amount'}}}])
+[
+  { _id: 'TE', totalamount: 45000 },
+  { _id: 'BE', totalamount: 20000 }
+]
+fees> db.fees.aggregate([{$group:{_id:null ,totalamount:{$first:'$Amount'}}}])
+[ { _id: null, totalamount: 45000 } ]
+fees> db.fees.aggregate([{$group:{_id:null ,totalamount:{$last:'$Amount'}}}])
+[ { _id: null, totalamount: 45000 } ]
+fees> db.createIndex({Rollno:1}
+... db.createIndex({Rollno:1})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (2:0)
+
+  1 | db.createIndex({Rollno:1}
+> 2 | db.createIndex({Rollno:1})
+    | ^
+  3 |
+
+fees> db.fees.createIndex({Rollno:1} )
+Rollno_1
+fees> db.fees.getIndex()
+TypeError: db.fees.getIndex is not a function
+fees> db.fees.getIndexes()
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { Rollno: 1 }, name: 'Rollno_1' }
+]
+fees> db.fees.createIndex({Rollno:1},{Class:1 )
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:40)
+
+> 1 | db.fees.createIndex({Rollno:1},{Class:1 )
+    |                                         ^
+  2 |
+
+fees> db.fees.createIndex({Rollno:1},{Class:1} )
+Rollno_1
+fees> db.fees.getIndexes()
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { Rollno: 1 }, name: 'Rollno_1' }
+]
+fees> db.fees.createIndex({Class:1},{spare:true} )
+Class_1
+fees> db.fees.getIndexes()
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { Rollno: 1 }, name: 'Rollno_1' },
+  { v: 2, key: { Class: 1 }, name: 'Class_1' }
+]
