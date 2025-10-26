@@ -1,0 +1,185 @@
+demo> use Banks;
+switched to db Banks
+Banks> db.Banks.insertMany([{cid:101,c_name:'udayan',b_name:'SBI',branch:'pune',bal:800000}]);
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('68e7c4dc8d8e96e602cebea4') }
+}
+Banks> db.Banks.insertMany([{cid:102,c_name:'kunal',b_name:'HDFC',branch:'mumbai',bal:900000}]);
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('68e7c4fc8d8e96e602cebea5') }
+}
+Banks> db.Banks.insertMany([{cid:103,c_name:'yash',b_name:'HDFC',branch:'pune',bal:1000000}]);
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('68e7c5128d8e96e602cebea6') }
+}
+Banks> db.Banks.insertMany([{cid:104,c_name:'atharva',b_name:'Axis',branch:'mumbai',bal:500000}]);
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('68e7c5358d8e96e602cebea7') }
+}
+Banks> db.Banks.insertMany([{cid:105,c_name:'rohan',b_name:'Axis',branch:'mumbai',bal:3800000}]);
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('68e7c54b8d8e96e602cebea8') }
+}
+Banks> db.Banks.insertMany([{cid:106,c_name:'raj',b_name:'SBI',branch:'mumbai',bal:365000}]);
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('68e7c56a8d8e96e602cebea9') }
+}
+Banks> db.Banks.insertMany([{cid:107,c_name:'harsh',b_name:'Axis',branch:'mumbai',bal:450670}]);
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('68e7c58d8d8e96e602cebeaa') }
+}
+Banks> db.Banks.insertMany([{cid:108,c_name:'shiv',b_name:'HDFC',branch:'nashik',bal:543210}]);
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('68e7c5bd8d8e96e602cebeab') }
+}
+Banks> db.Banks.insertMany([{cid:109,c_name:'aditya',b_name:'HDFC',branch:'nashik',bal:875630}]);
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('68e7c5dc8d8e96e602cebeac') }
+}
+Banks> db.Banks.insertMany([{cid:110,c_name:'om',b_name:'HDFC',branch:'latur',bal:8700030}]);
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('68e7c6008d8e96e602cebead') }
+}
+Banks> db.Banks.insertMany([{cid:111,c_name:'anita',b_name:'SBI',branch:'latur',bal:670930}]);
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('68e7c62f8d8e96e602cebeae') }
+}
+Banks> db.Banks.insertMany([{cid:112,c_name:'nikita',b_name:'SBI',branch:'talegoan',bal:65430930}]);
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('68e7c6608d8e96e602cebeaf') }
+}
+Banks> db.Banks.find();
+[
+  {
+    _id: ObjectId('68e7c4dc8d8e96e602cebea4'),
+    cid: 101,
+    c_name: 'udayan',
+    b_name: 'SBI',
+    branch: 'pune',
+    bal: 800000
+  },
+  {
+    _id: ObjectId('68e7c4fc8d8e96e602cebea5'),
+    cid: 102,
+    c_name: 'kunal',
+    b_name: 'HDFC',
+    branch: 'mumbai',
+    bal: 900000
+  },
+  {
+    _id: ObjectId('68e7c5128d8e96e602cebea6'),
+    cid: 103,
+    c_name: 'yash',
+    b_name: 'HDFC',
+    branch: 'pune',
+    bal: 1000000
+  },
+  {
+    _id: ObjectId('68e7c5358d8e96e602cebea7'),
+    cid: 104,
+    c_name: 'atharva',
+    b_name: 'Axis',
+    branch: 'mumbai',
+    bal: 500000
+  },
+  {
+    _id: ObjectId('68e7c54b8d8e96e602cebea8'),
+    cid: 105,
+    c_name: 'rohan',
+    b_name: 'Axis',
+    branch: 'mumbai',
+    bal: 3800000
+  },
+  {
+    _id: ObjectId('68e7c56a8d8e96e602cebea9'),
+    cid: 106,
+    c_name: 'raj',
+    b_name: 'SBI',
+    branch: 'mumbai',
+    bal: 365000
+  },
+  {
+    _id: ObjectId('68e7c58d8d8e96e602cebeaa'),
+    cid: 107,
+    c_name: 'harsh',
+    b_name: 'Axis',
+    branch: 'mumbai',
+    bal: 450670
+  },
+  {
+    _id: ObjectId('68e7c5bd8d8e96e602cebeab'),
+    cid: 108,
+    c_name: 'shiv',
+    b_name: 'HDFC',
+    branch: 'nashik',
+    bal: 543210
+  },
+  {
+    _id: ObjectId('68e7c5dc8d8e96e602cebeac'),
+    cid: 109,
+    c_name: 'aditya',
+    b_name: 'HDFC',
+    branch: 'nashik',
+    bal: 875630
+  },
+  {
+    _id: ObjectId('68e7c6008d8e96e602cebead'),
+    cid: 110,
+    c_name: 'om',
+    b_name: 'HDFC',
+    branch: 'latur',
+    bal: 8700030
+  },
+  {
+    _id: ObjectId('68e7c62f8d8e96e602cebeae'),
+    cid: 111,
+    c_name: 'anita',
+    b_name: 'SBI',
+    branch: 'latur',
+    bal: 670930
+  },
+  {
+    _id: ObjectId('68e7c6608d8e96e602cebeaf'),
+    cid: 112,
+    c_name: 'nikita',
+    b_name: 'SBI',
+    branch: 'talegoan',
+    bal: 65430930
+  }
+]
+Banks> var map=function(){emit(this.cid,this.bal)};
+
+Banks> var reduce=function(cid,bal){return Array.sum(bal)}
+
+Banks> db.Banks.mapReduce(map,reduce,{out:'transactions'})
+DeprecationWarning: Collection.mapReduce() is deprecated. Use an aggregation instead.
+See https://mongodb.com/docs/manual/core/map-reduce for details.
+{ result: 'transactions', ok: 1 }
+Banks> db.transactions.find();
+[
+  { _id: 108, value: 543210 },
+  { _id: 105, value: 3800000 },
+  { _id: 103, value: 1000000 },
+  { _id: 101, value: 800000 },
+  { _id: 102, value: 900000 },
+  { _id: 106, value: 365000 },
+  { _id: 107, value: 450670 },
+  { _id: 104, value: 500000 },
+  { _id: 109, value: 875630 },
+  { _id: 110, value: 8700030 },
+  { _id: 111, value: 670930 },
+  { _id: 112, value: 65430930 }
+]
+Banks>
